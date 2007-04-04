@@ -1,0 +1,51 @@
+Agent::TCLI::Package::Net version 0.0.1
+
+This suite allows one to run tests for Network Security device functionality.
+
+INSTALLATION
+
+Currently this is still alpha. I've only been running it out of blib
+(see example sources). The ./Build install has not been tested,
+though there is no known reason why it would not work.
+
+Install with Module::Build, using the following commands in the directory
+that this package unipped into:
+
+    perl Build.PL
+    ./Build
+    ./Build test
+    ./Build install
+
+DEPENDENCIES
+
+Of course the Agent::TCLI::Core. You'll alsoe need:
+
+	POE::Component::Client::Ping
+	POE::Component::Client::Traceroute
+	POE::Component::Client::HTTP
+
+USING
+
+Passive Bots:
+One creates a script, see or ex/net.pl, that loads up a TCLI transport with
+users, packages and other pertinent information. The bot will log in, join
+chatrooms if in the user list, and wait for further commands from authorized
+users or in a chatroom.
+
+Test script:
+A test script is written, see ex/probe.pl, that loads up a Test Transport,
+other necessary transports, necessary local packages, and testees.
+
+Using testees, one creates tests ala Test::More with the $testee->ok or
+$testee->like_body and other Testee tests. These may wil asynchronously
+after the testing starts.
+
+It is necessary to call the test_master->run at the end of the test script
+to ensure that all tests have completed.
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2007, Alcatel-Lucent
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
