@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: TCLI.Package.Net.Ping.t 43 2007-04-03 02:25:07Z hacker $
+# $Id: TCLI.Package.Net.Ping.t 61 2007-05-02 17:35:42Z hacker $
 
 use Test::More tests => 29;
 use lib 'blib/lib';
@@ -28,7 +28,7 @@ sub POE::Kernel::TRACE_DEFAULT  () { $poe_td }
 sub POE::Kernel::TRACE_EVENTS  () { $poe_te }
 
 use Agent::TCLI::Transport::Test;
-use Agent::TCLI::Transport::Test::Testee;
+use Agent::TCLI::Testee;
 use POE;
 
 # TASK Test suite is not complete. Need testing for catching errors.
@@ -52,7 +52,7 @@ my $test_master = Agent::TCLI::Transport::Test->new({
 
 });
 
-my $ping = Agent::TCLI::Transport::Test::Testee->new(
+my $ping = Agent::TCLI::Testee->new(
 	'test_master'	=> $test_master,
 	'addressee'		=> 'self',
 );
@@ -86,10 +86,11 @@ $ping->like_body( 'ping target www.google.com',qr(pong), 'ping google');
 $ping->like_body( 'ping target localhost retry_count 10',qr(pong));
 #$ping->like_body( 'ping target 127.0.0.1',qr(Error: ping already in progress for), 'ping 127.0.0.1');
 
-$ping->not_ok( 'ping','error no target supplied' );
+$ping->ok('ping');
+
 $ping->like_body( 'ping set target abcd',qr(Invalid: target), 'ping BAD set target ');
-$ping->like_body( 'ping set retry_count abcd',qr(Invalid: retry_count not a UINT), 'ping BAD set retry_count' );
-$ping->like_body( 'ping set timeout abcd',qr(Invalid: timeout not a UINT), 'ping BAD set timeout');
+$ping->like_body( 'ping set retry_count abcd',qr(Invalid: retry_count), 'ping BAD set retry_count' );
+$ping->like_body( 'ping set timeout abcd',qr(Invalid: timeout), 'ping BAD set timeout');
 
 $ping->like_body( 'ping target ""',qr(Target must be defined in command line or in default settings.));
 

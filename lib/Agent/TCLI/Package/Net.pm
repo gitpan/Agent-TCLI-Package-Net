@@ -1,6 +1,6 @@
 package Agent::TCLI::Package::Net;
 #
-# $Id: Net.pm 44 2007-04-03 02:28:56Z hacker $
+# $Id: Net.pm 61 2007-05-02 17:35:42Z hacker $
 #
 =pod
 
@@ -14,7 +14,7 @@ This document describes Agent::TCLI::Package::Net
 
 =head1 SYNOPSIS
 
-This is documentat and version only module.
+This is documentation and version only module.
 
 =head1 DESCRIPTION
 
@@ -25,7 +25,7 @@ placeholder.
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.020';
 
 1;
 #__END__

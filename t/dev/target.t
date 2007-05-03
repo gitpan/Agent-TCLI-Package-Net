@@ -1,7 +1,9 @@
 #!/usr/bin/perl
+# This is a version for debugging Agents for developer use
 
 use warnings;
 use strict;
+use lib ('blib/lib');
 use Test::More qw(no_plan);
 
 sub VERBOSE () { 0 }
@@ -27,7 +29,6 @@ $username = $opt->get_username ? $opt->get_username : 'username';
 $password = $opt->get_password ? $opt->get_password : 'password';
 $domain = $opt->get_domain ? $opt->get_domain : 'example.com';
 $host = $opt->get_host ? $opt->get_host : $domain;
-$resource = $opt->get_resource ? $opt->get_resource : 'test';
 
 use POE;
 use Agent::TCLI::Transport::Test;
@@ -44,23 +45,36 @@ use Agent::TCLI::Package::Net::HTTP;
 # to ensure we don't mess up the Test::Harness processing.
 my @packages = (
 	# We need the transport controller package to shut down the transport at the
-	# end of the testing.
-	Agent::TCLI::Package::XMPP->new,
-
-	Agent::TCLI::Package::Net::HTTP->new,
+	#end of the testing.
+	Agent::TCLI::Package::XMPP->new(
+	    'verbose'    => \$verbose ,
+		'do_verbose'	=> sub { diag( @_ ) },
+	),
+	Agent::TCLI::Package::Net::HTTP->new({
+		'verbose'		=> \$verbose,
+		'do_verbose'	=> sub { diag( @_ ) },
+	}),
 );
 
 # Need a transport to deliver the tests to remote hosts
 Agent::TCLI::Transport::XMPP->new(
-    'jid'		=> Net::XMPP::JID->new($username.'@'.$domain.'/'.$resource),
+    'jid'		=> Net::XMPP::JID->new($username.'@'.$domain.'/test'),
     'jserver'	=> $host,
 	'jpassword'	=> $password,
+
+    'verbose'    	=> \$verbose,        # Verbose sets level
+	'do_verbose'	=> sub { diag( @_ ) },
 );
 
 my $test_master = Agent::TCLI::Transport::Test->new({
+
+    'verbose'   	=> \$verbose,        # Verbose sets level
+	'do_verbose'	=> sub { diag( @_ ) },
+
     'control_options'	=> {
 	    'packages' 		=> \@packages,
     },
+
 });
 
 # Set up the local test
@@ -75,6 +89,9 @@ my $remote = Agent::TCLI::Testee->new({
 	'addressee'		=> $username.'@'.$domain.'/tcli',
 	'transport'		=> 'transport_xmpp',  # The default POE Session alias
 	'protocol'		=> 'XMPP',
+
+	'verbose'		=> \$verbose,
+	'do_verbose'	=> sub { diag( @_ ) },
 });
 
 # Beginning of tests

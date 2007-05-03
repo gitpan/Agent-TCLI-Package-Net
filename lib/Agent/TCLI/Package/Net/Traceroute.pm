@@ -1,6 +1,6 @@
 package Agent::TCLI::Package::Net::Traceroute;
 #
-# $Id: Traceroute.pm 44 2007-04-03 02:28:56Z hacker $
+# $Id: Traceroute.pm 63 2007-05-03 15:57:38Z hacker $
 #
 =pod
 
@@ -8,17 +8,24 @@ package Agent::TCLI::Package::Net::Traceroute;
 
 Agent::TCLI::Package::Net::Traceroute
 
-=head1 VERSION
-
-This document describes Agent::TCLI::Package::Net::Traceroute version 0.0.x
-
 =head1 SYNOPSIS
 
-Traceroute example.com
+From within a TCLI Agent session:
+
+traceroute example.com
 
 =head1 DESCRIPTION
 
-Makes a standard traceroute.
+This module provides a package of commands for the TCLI environment. Currently
+one must use the TCLI environment (or browse the source) to see documentation
+for the commands it supports within the TCLI Agent.
+
+Makes a standard traceroute request.
+
+=head1 INTERFACE
+
+This module must be loaded into a Agent::TCLI::Control by an
+Agent::TCLI::Transport in order for a user to interface with it.
 
 =cut
 
@@ -34,7 +41,7 @@ use Agent::TCLI::Command;
 use Agent::TCLI::Parameter;
 
 
-our $VERSION = '0.0.'.sprintf "%04d", (qw($Id: Traceroute.pm 44 2007-04-03 02:28:56Z hacker $))[2];
+our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: Traceroute.pm 63 2007-05-03 15:57:38Z hacker $))[2];
 
 =head2 ATTRIBUTES
 
@@ -48,22 +55,21 @@ Some attributes may be created through the loading of the Parameters for this
 command package. These are not documented separately. See the source for the
 exact attribute names in use.
 
+=over
+
+=back
+
 =head2 METHODS
 
 Most of these methods are for internal use within the TCLI system and may
 be of interest only to developers trying to enhance TCLI.
 
-=head2 new ( hash of attributes )
+=over
+
+=item new ( hash of attributes )
 
 Usually the only attributes that are useful on creation are the
 verbose and do_verbose attrbiutes that are inherited from Agent::TCLI::Base.
-
-=cut
-
-=head3 _start
-
-This POE event handler is called when POE starts up a Package.
-The B<_start> method is :Cumulative within OIO.
 
 =cut
 
@@ -75,7 +81,7 @@ sub _start {
 	# are we up before OIO has finished initializing object?
 	if (!defined( $self->name ))
 	{
-		$kernel->delay('_start', 1 );
+		$kernel->yield('_start');
 		return;
 	}
 
@@ -105,12 +111,6 @@ sub _start {
 	return($self->name.":_start complete ");
 } #end start
 
-=head3 _shutdown
-
-This POE event handler is called to shutdown the Package.
-
-=cut
-
 sub _shutdown {
     my ($kernel,  $self,) =
       @_[KERNEL, OBJECT,];
@@ -122,7 +122,7 @@ sub _shutdown {
 	return($self->name.":_shutdown complete ");
 }
 
-=head3 trace
+=item trace
 
 This POE event handler processes the trace command
 
@@ -221,7 +221,7 @@ sub trace {
 	return($self->name.":trace done");
 }
 
-=head3 TraceResponse
+=item TraceResponse
 
 This POE event handler processes the return data from the PoCo::Client::Traceroute.
 
@@ -274,9 +274,10 @@ sub TraceResponse {
 	return($self->name.":TraceResponse done");
 }
 
-=head3 TraceResponse
+=item TraceHopResponse
 
-This POE event handler processes the per hop return data from the PoCo::Client::Traceroute.
+This POE event handler processes the per hop return data from the
+PoCo::Client::Traceroute.
 
 =cut
 
@@ -327,12 +328,6 @@ sub TraceHopResponse {
 	return($self->name.":TraceResponse done");
 }
 
-=head3 _preinit
-
-This private Object::InsideOut (OIO) method is used for object initialization.
-
-=cut
-
 sub _preinit :PreInit {
 	my ($self,$args) = @_;
 
@@ -356,12 +351,6 @@ sub _preinit :PreInit {
       ],
 	);
 }
-
-=head3 _init
-
-This private OIO method is used for object initialization.
-
-=cut
 
 sub _init :Init {
 	my $self = shift;
@@ -443,10 +432,14 @@ Agent::TCLI::Parameter:
   name: baseport
   constraints:
     - UINT
+    -
+      - BETWEEN
+      - 1
+      - 65279
   default: 33434
   help: The starting port for udp traces.
   manual: >
-    BasePport sets the first port used for traceroute when not using ICMP.
+    Baseport sets the first port used for traceroute when not using ICMP.
     The baseport is incremented by one for each hop, by traceroute
     convention. BasePort defaults to 33434 and can not be higher than 65279.
   type: Param
@@ -481,7 +474,7 @@ Agent::TCLI::Command:
   call_style: session
   command: tcli_trace
   contexts:
-    '/': traceroute
+    ROOT: traceroute
   handler: trace
   help: determine route to a host
   manual: >
@@ -546,6 +539,8 @@ Agent::TCLI::Command:
 
 1;
 #__END__
+
+=back
 
 =head3 INHERITED METHODS
 

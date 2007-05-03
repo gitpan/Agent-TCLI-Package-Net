@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: TCLI.Package.Net.HTTP.t 43 2007-04-03 02:25:07Z hacker $
+# $Id: TCLI.Package.Net.HTTP.t 61 2007-05-02 17:35:42Z hacker $
 
 use Test::More qw(no_plan);
 use lib 'blib/lib';
@@ -26,7 +26,7 @@ sub POE::Kernel::TRACE_EVENTS  () { $poe_te }
 
 use POE;
 use Agent::TCLI::Transport::Test;
-use Agent::TCLI::Transport::Test::Testee;
+use Agent::TCLI::Testee;
 
 # TASK Test suite is not complete. Need testing for catching errors.
 
@@ -52,7 +52,7 @@ my $test_master = Agent::TCLI::Transport::Test->new({
 
 });
 
-my $t = Agent::TCLI::Transport::Test::Testee->new(
+my $t = Agent::TCLI::Testee->new(
 	'test_master'	=> $test_master,
 	'addressee'		=> 'self',
 );
@@ -105,7 +105,7 @@ $t->ok('','Retry count 2 of 2');
 
 # Bad cases
 $t->like_body('cget http://testing.erichacker.com/',
-		qr(No valid args found!),  'Forgot url= in command');
+		qr(Invalid.*?url),  'Forgot url= in command');
 $t->not_ok('cget url=htpp://testing.erichacker.com/',
 		'Invalid url= in command');
 

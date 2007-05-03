@@ -1,6 +1,6 @@
 package Agent::TCLI::Package::Net::HTTP;
 #
-# $Id: HTTP.pm 44 2007-04-03 02:28:56Z hacker $
+# $Id: HTTP.pm 63 2007-05-03 15:57:38Z hacker $
 #
 =pod
 
@@ -14,12 +14,23 @@ This document describes Agent::TCLI::Package::Net::HTTP version 0.0.1
 
 =head1 SYNOPSIS
 
+From within a TCLI Agent session:
+
 tget url=http://example.com/bad_request resp=404
 
 =head1 DESCRIPTION
 
-Makes stadard http requests, either testing that a response code was given
+This module provides a package of commands for the TCLI environment. Currently
+one must use the TCLI environment (or browse the source) to see documentation
+for the commands it supports within the TCLI Agent.
+
+Makes standard http requests, either testing that a response code was given
 or receive the response code back.
+
+=head1 INTERFACE
+
+This module must be loaded into a Agent::TCLI::Control by an
+Agent::TCLI::Transport in order for a user to interface with it.
 
 =cut
 
@@ -36,7 +47,7 @@ use Agent::TCLI::Command;
 use Agent::TCLI::Parameter;
 use Getopt::Lucid qw(:all);
 
-our $VERSION = '0.0.'.sprintf "%04d", (qw($Id: HTTP.pm 44 2007-04-03 02:28:56Z hacker $))[2];
+our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: HTTP.pm 63 2007-05-03 15:57:38Z hacker $))[2];
 
 =head2 ATTRIBUTES
 
@@ -46,13 +57,15 @@ methods unless otherwise noted.
 These attrbiutes are generally internal and are probably only useful to
 someone trying to enhance the functionality of this Package module.
 
+=over
+
 =cut
 
 #my @session 	:Field
 #				:Weak
 #				:Type('POE::Session');
 
-=head3 poco_cm
+=item poco_cm
 
 A POE connection manager session.
 B<cm> will only accept POE::Component::Client::Keepalive type values.
@@ -63,7 +76,7 @@ my @poco_cm			:Field
 					:All('poco_cm')
 					:Type('POE::Component::Client::KeepaliveRaw' );
 
-=head3 poco_http
+=item poco_http
 
 The POE http client.
 B<poco_http> will only accept POE::Component::Client::HTTP type values.
@@ -73,7 +86,7 @@ my @poco_http		:Field
 					:All('poco_http')
 					:Type('POE::Component::Client::HTTPRaw' );
 
-=head3 user_agents
+=item user_agents
 
 An array of user_agents to use.
 B<user_agents> will only accept ARRAY type values.
@@ -83,7 +96,7 @@ my @user_agents		:Field
 					:All('user_agents')
 					:Type('ARRAY' );
 
-=head3 cookie_jar
+=item cookie_jar
 
 An place to keep cookies
 
@@ -91,7 +104,7 @@ An place to keep cookies
 my @cookie_jar		:Field
 					:All('cookie_jar');
 
-=head3 id_count
+=item id_count
 
 A running count of internal request IDs to use
 B<id_count> will only accept NUMERIC type values.
@@ -101,27 +114,28 @@ my @id_count		:Field
 					:All('id_count')
 					:Type('NUMERIC' );
 #
-#=head3 requests
+#=item requests
 #
 #A hash collection of requests that are in progress
 #
 #=cut
 #my @requests		:Field
 #					:All('requests');
+=back
 
 =head2 METHODS
 
 Most of these methods are for internal use within the TCLI system and may
 be of interest only to developers trying to enhance TCLI.
 
-=head2 new ( hash of attributes )
+=over
+
+=item new ( hash of attributes )
 
 Usually the only attributes that are useful on creation are the
 verbose and do_verbose attrbiutes that are inherited from Agent::TCLI::Base.
 
-=cut
-
-=head3 _preinit
+=item _preinit
 
 This private Object::InsideOut (OIO) method is used for object initialization.
 It establishes the POE::Session and the POE alias used.
@@ -153,7 +167,7 @@ sub _preinit :PreInit {
 
 }
 
-=head3 _init
+=item _init
 
 This private OIO method is used for object initialization.
 Here the commands and parameters are defined in YAML.
@@ -244,7 +258,7 @@ Agent::TCLI::Command:
   call_style: session
   command: tcli_http
   contexts:
-    '/': http
+    ROOT: http
   handler: establish_context
   help: http web cient environment
   manual: >
@@ -271,6 +285,8 @@ Agent::TCLI::Command:
     response_code:
     retry_interval:
     retry_count:
+  required:
+    url:
   topic: net
   usage: tget tget url=http:\example.com\request resp=404
 ---
@@ -290,13 +306,15 @@ Agent::TCLI::Command:
     url:
     retry_interval:
     retry_count:
+  required:
+    url:
   topic: net
   usage: http cget url=http:\example.com\request
 ...
 
 }
 
-=head3 _start
+=item _start
 
 This POE event handler is called when POE starts up a Package.
 
@@ -310,7 +328,7 @@ sub _start {
 	# are we up before OIO has finished initializing object?
 	if (!defined( $self->name ))
 	{
-		$kernel->delay('_start', 1 );
+		$kernel->yield('_start');
 		return;
 	}
 
@@ -340,11 +358,11 @@ sub _start {
 # 		NoProxy   => [ "localhost", "127.0.0.1" ], # defs to NO_PROXY env. variable
 	));
 
-	$self->Verbose(" Dump ".$self->dump(1) );
+	$self->Verbose(" Dump ".$self->dump(1),3 );
 
 }
 
-=head3 _stop
+=item _stop
 
 This POE event handler is called when POE stops a Package.
 
@@ -549,9 +567,11 @@ sub ResponseProgress {
 #	Not doing anything yet.
 }
 
-=head3 show
+=item show
 
 This POE event handler executes the show commands.
+
+=back
 
 =cut
 

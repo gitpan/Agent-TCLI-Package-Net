@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Agent-TCLI-Package-Net
-version: 0.01
+version: 0.020
 author:
   - Eric Hacker <hacker@cpan.org>
 abstract: Network tools for TCLI agents
@@ -8,24 +8,29 @@ license: perl
 resources:
   license: http://dev.perl.org/licenses/
 requires:
-  Agent::TCLI: 0.02
+  Agent::TCLI: 0.03
+  FormValidator::Simple::Plugin::NetAddr::IP: 0.01
   POE::Component::Client::HTTP: 0
   POE::Component::Client::Keepalive: 0
   POE::Component::Client::Ping: 0
   POE::Component::Client::Traceroute: 0
+  POE::Component::Server::SimpleHTTP: 0
 provides:
   Agent::TCLI::Package::Net:
     file: lib/Agent/TCLI/Package/Net.pm
-    version: 0.01
+    version: 0.020
   Agent::TCLI::Package::Net::HTTP:
     file: lib/Agent/TCLI/Package/Net/HTTP.pm
-    version: 0.0.0044
+    version: 0.020.0063
+  Agent::TCLI::Package::Net::HTTPD:
+    file: lib/Agent/TCLI/Package/Net/HTTPD.pm
+    version: 0.020.0066
   Agent::TCLI::Package::Net::Ping:
     file: lib/Agent/TCLI/Package/Net/Ping.pm
-    version: 0.0.0044
+    version: 0.020.0063
   Agent::TCLI::Package::Net::Traceroute:
     file: lib/Agent/TCLI/Package/Net/Traceroute.pm
-    version: 0.0.0044
+    version: 0.020.0063
 generated_by: Module::Build version 0.2805
 meta-spec:
   url: |-

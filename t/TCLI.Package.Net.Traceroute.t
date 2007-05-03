@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: TCLI.Package.Net.Traceroute.t 43 2007-04-03 02:25:07Z hacker $
+# $Id: TCLI.Package.Net.Traceroute.t 61 2007-05-02 17:35:42Z hacker $
 
 use Test::More tests => 33;
 use lib 'blib/lib';
@@ -28,7 +28,7 @@ sub POE::Kernel::TRACE_DEFAULT  () { $poe_td }
 sub POE::Kernel::TRACE_EVENTS  () { $poe_te }
 
 use Agent::TCLI::Transport::Test;
-use Agent::TCLI::Transport::Test::Testee;
+use Agent::TCLI::Testee;
 use POE;
 
 # TASK Test suite is not complete. Need more testing for catching errors.
@@ -51,7 +51,7 @@ my $test_master = Agent::TCLI::Transport::Test->new({
 
 });
 
-my $tracer = Agent::TCLI::Transport::Test::Testee->new(
+my $tracer = Agent::TCLI::Testee->new(
 	'test_master'	=> $test_master,
 	'addressee'		=> 'self',
 );
@@ -91,10 +91,10 @@ $tracer->like_body( 'traceroute show queries',qr(queries.*?4), 'traceroute show 
 $tracer->like_body( 'traceroute target www.google.com useicmp',qr(Traceroute results for ), 'traceroute google');
 $tracer->like_body( 'traceroute target 127.0.0.1',qr(Traceroute results for ), 'traceroute 127.0.0.1');
 
-$tracer->not_ok( 'traceroute','error no target supplied' );
+$tracer->ok( 'traceroute' );
 $tracer->like_body( 'traceroute set target abcd',qr(Invalid: target), 'traceroute BAD set target ');
-$tracer->like_body( 'traceroute set queries abcd',qr(Invalid: queries not a UINT), 'traceroute BAD set queries' );
-$tracer->like_body( 'traceroute set timeout abcd',qr(Invalid: timeout not a UINT), 'traceroute BAD set timeout');
+$tracer->like_body( 'traceroute set queries abcd',qr(Invalid: queries ), 'traceroute BAD set queries' );
+$tracer->like_body( 'traceroute set timeout abcd',qr(Invalid: timeout ), 'traceroute BAD set timeout');
 
 $test_master->run;
 
