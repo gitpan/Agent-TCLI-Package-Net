@@ -13,8 +13,11 @@ my $builder = Module::Build->new(
 		'POE::Component::Client::Ping' 			=> '0',
 		'POE::Component::Client::Traceroute' 	=> '0',
 		'POE::Component::Client::HTTP'		 	=> '0',
+		'POE::Component::Client::SMTP'		 	=> '0',
 		'POE::Component::Client::Keepalive'		=> '0',
 		'POE::Component::Server::SimpleHTTP' 	=> '0',
+		'Email::MIME::Creator'					=> '0',
+		'File::Slurp'							=> '0',
 
 		'FormValidator::Simple::Plugin::NetAddr::IP'	=> '0.01',
     	},

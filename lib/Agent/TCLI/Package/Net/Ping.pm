@@ -1,16 +1,12 @@
 package Agent::TCLI::Package::Net::Ping;
 #
-# $Id: Ping.pm 63 2007-05-03 15:57:38Z hacker $
+# $Id: Ping.pm 72 2007-06-07 11:05:52Z hacker $
 #
 =pod
 
 =head1 NAME
 
 Agent::TCLI::Package::Net::Ping
-
-=head1 VERSION
-
-This document describes Agent::TCLI::Package::Net::Ping version 0.0.x
 
 =head1 SYNOPSIS
 
@@ -44,7 +40,7 @@ use Agent::TCLI::Command;
 use Agent::TCLI::Parameter;
 
 
-our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: Ping.pm 63 2007-05-03 15:57:38Z hacker $))[2];
+our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: Ping.pm 72 2007-06-07 11:05:52Z hacker $))[2];
 
 =head2 ATTRIBUTES
 
@@ -380,7 +376,7 @@ details.
 
 =head1 AUTHOR
 
-Eric Hacker	 E<lt>perl.mod at erichacker.comE<gt>
+Eric Hacker	 E<lt>hacker at cpan.orgE<gt>
 
 =head1 BUGS
 

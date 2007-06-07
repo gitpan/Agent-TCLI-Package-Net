@@ -1,6 +1,6 @@
 package Agent::TCLI::Package::Net::HTTPD;
 #
-# $Id: HTTPD.pm 66 2007-05-03 18:18:06Z hacker $
+# $Id: HTTPD.pm 72 2007-06-07 11:05:52Z hacker $
 #
 =pod
 
@@ -8,15 +8,11 @@ package Agent::TCLI::Package::Net::HTTPD;
 
 Agent::TCLI::Package::Net:HTTP
 
-=head1 VERSION
-
-This document describes Agent::TCLI::Package::Net::HTTP version 0.0.1
-
 =head1 SYNOPSIS
 
 From within a TCLI Agent session:
 
-tget url=http://example.com/bad_request resp=404
+httpd uri add regex=^/good/.* response=OK200
 
 =head1 DESCRIPTION
 
@@ -24,8 +20,13 @@ This module provides a package of commands for the TCLI environment. Currently
 one must use the TCLI environment (or browse the source) to see documentation
 for the commands it supports within the TCLI Agent.
 
-Makes standard http requests, either testing that a response code was given
-or receive the response code back.
+This package starts a specialized HTTPD on the local system. It does not
+return files but does return 404 or 200 values for user defined URLs. It can
+also be set to completely ignore a request. URLs may be defined with
+regular expressions.
+
+It can also log directly to the log being monitored by the Tail command
+in memory with no disk writes.
 
 =head1 INTERFACE
 
@@ -48,7 +49,7 @@ use Agent::TCLI::Parameter;
 require FormValidator::Simple;
 FormValidator::Simple->import('NetAddr::IP');
 
-our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: HTTPD.pm 66 2007-05-03 18:18:06Z hacker $))[2];
+our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: HTTPD.pm 72 2007-06-07 11:05:52Z hacker $))[2];
 
 =head2 ATTRIBUTES
 
@@ -169,7 +170,7 @@ Agent::TCLI::Parameter:
     - ASCII
   help: A hostname that the server will respond back with.
   manual: >
-    The host nmae is the name hte server will respond back with. It
+    The host nmae is the name the server will respond back with. It
     does not have to be the correct DNS name for the server. It will default
     to Sys::Hostname.
   type: Param

@@ -1,5 +1,9 @@
 Revision history for Agent::TCLI::Package::Net
 
+0.03	Thu Jun  7 06:42:00 EST 2007
+	- Added SMTP client package
+	- Cleaned up some PODs
+
 0.02	Thu May  3 14:04:37 EST 2007
 	- updated tests for TCLI-Core 0.03
 	- Fixed POD documentation

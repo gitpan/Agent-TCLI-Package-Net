@@ -1,16 +1,12 @@
 package Agent::TCLI::Package::Net::HTTP;
 #
-# $Id: HTTP.pm 63 2007-05-03 15:57:38Z hacker $
+# $Id: HTTP.pm 72 2007-06-07 11:05:52Z hacker $
 #
 =pod
 
 =head1 NAME
 
 Agent::TCLI::Package::Net:HTTP
-
-=head1 VERSION
-
-This document describes Agent::TCLI::Package::Net::HTTP version 0.0.1
 
 =head1 SYNOPSIS
 
@@ -47,7 +43,7 @@ use Agent::TCLI::Command;
 use Agent::TCLI::Parameter;
 use Getopt::Lucid qw(:all);
 
-our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: HTTP.pm 63 2007-05-03 15:57:38Z hacker $))[2];
+our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: HTTP.pm 72 2007-06-07 11:05:52Z hacker $))[2];
 
 =head2 ATTRIBUTES
 
@@ -586,7 +582,7 @@ details.
 
 =head1 AUTHOR
 
-Eric Hacker	 E<lt>perl.mod at erichacker.comE<gt>
+Eric Hacker	 E<lt>hacker at cpan.orgE<gt>
 
 =head1 BUGS
 

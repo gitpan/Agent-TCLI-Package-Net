@@ -1,6 +1,6 @@
 package Agent::TCLI::Package::Net;
 #
-# $Id: Net.pm 61 2007-05-02 17:35:42Z hacker $
+# $Id: Net.pm 72 2007-06-07 11:05:52Z hacker $
 #
 =pod
 
@@ -25,14 +25,14 @@ placeholder.
 
 =cut
 
-our $VERSION = '0.020';
+our $VERSION = '0.030';
 
 1;
 #__END__
 
 =head1 AUTHOR
 
-Eric Hacker	 E<lt>perl.mod at erichacker.comE<gt>
+Eric Hacker	 E<lt>hacker at cpan.orgE<gt>
 
 =head1 BUGS
 

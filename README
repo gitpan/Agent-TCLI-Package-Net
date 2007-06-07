@@ -1,4 +1,4 @@
-Agent::TCLI::Package::Net version 0.02
+Readme for Agent::TCLI::Package::Net version 0.03
 
 This suite allows one to run tests for Network device functionality.
 
@@ -14,18 +14,20 @@ that this package unipped into:
 
 DEPENDENCIES
 
-Of course the Agent::TCLI core. You'll alsoe need:
+Of course the Agent::TCLI core. You'll also need:
 
 	POE::Component::Client::Ping
 	POE::Component::Client::Traceroute
 	POE::Component::Client::HTTP
 	POE::Component::Server::SimpleHTTP
 	FormValidator::Simple::Plugin::NetAddr::IP
+	Email::MIME::Creator
+	File::Slurp
 
 USING
 
 Passive Agents:
-One creates a script, see or agent_net.pl, that loads up a TCLI transport with
+One creates a script, see agent_net.pl, that loads up a TCLI transport with
 users, packages and other pertinent information. The agent will log in, join
 chatrooms if in the user list, and wait for further commands from authorized
 users or in a chatroom.

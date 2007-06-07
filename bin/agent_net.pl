@@ -112,9 +112,11 @@ eval {$opt = Getopt::Lucid->getopt([
 		Param("password|p"),
 		Param("resource|r"),
 		Param("host"),
+		Param("master|m"),
 		Counter("verbose|v"),
 		Switch("help"),
 		Switch("man"),
+		Switch("blib|b"),
 	])};
 
 if($@)
@@ -125,6 +127,12 @@ if($@)
 
 pod2usage(1)  if ($opt->get_help);
 pod2usage(VERBOSE => 2)  if ($opt->get_man);
+
+# Hidden switch for dev testing
+if ($opt->get_blib)
+{
+	use lib 'blib/lib';
+}
 
 $verbose = $opt->get_verbose ? $opt->get_verbose : VERBOSE;
 
@@ -151,6 +159,7 @@ use Net::XMPP::JID;					# Required for XMPP transport
 use Agent::TCLI::Package::XMPP;		# Not required, but very useful to manage Transport::XMPP
 									# especially if you want a graceful shutdown. :)
 
+use Agent::TCLI::Package::Net::SMTP;
 use Agent::TCLI::Package::Net::HTTP;
 use Agent::TCLI::Package::Net::HTTPD;
 use Agent::TCLI::Package::Net::Ping;
@@ -185,6 +194,9 @@ my @packages = (
 	Agent::TCLI::Package::Net::HTTPD->new(
 	     'verbose'    => \$verbose ,
 	),
+	Agent::TCLI::Package::Net::SMTP->new(
+	     'verbose'    => \$verbose ,
+	),
 );
 
 # Define the authorized users of the Agent.
@@ -198,11 +210,12 @@ my @users = (
 		'protocol'	=> 'xmpp',
 		'auth'		=> 'master',
 	),
-#	Agent::TCLI::User->new(
-#		'id'		=> 'user1@'.$domain,
-#		'protocol'	=> 'xmpp',
-#		'auth'		=> 'master',
-#	),
+	defined ($opt->get_master) ?
+	Agent::TCLI::User->new(
+		'id'		=> $opt->get_master,
+		'protocol'	=> 'xmpp',
+		'auth'		=> 'master',
+	) : undef,
 #	Agent::TCLI::User->new(
 #		'id'		=> 'user2@'.$domain,
 #		'protocol'	=> 'xmpp',
