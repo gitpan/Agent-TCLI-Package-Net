@@ -1,18 +1,17 @@
 package Agent::TCLI::Package::Net::SMTP;
 #
-# $Id: SMTP.pm 72 2007-06-07 11:05:52Z hacker $
+# $Id: SMTP.pm 74 2007-06-08 00:42:53Z hacker $
 #
 =pod
 
 =head1 NAME
 
-Agent::TCLI::Package::Net:HTTP
+Agent::TCLI::Package::Net::SMTP
 
 =head1 SYNOPSIS
 
 From within a TCLI Agent session:
 
-tget url=http://example.com/bad_request resp=404
 
 =head1 DESCRIPTION
 
@@ -20,8 +19,7 @@ This module provides a package of commands for the TCLI environment. Currently
 one must use the TCLI environment (or browse the source) to see documentation
 for the commands it supports within the TCLI Agent.
 
-Makes standard http requests, either testing that a response code was given
-or receive the response code back.
+Sends a standard SMTP mail message.
 
 =head1 INTERFACE
 
@@ -39,11 +37,12 @@ use POE;
 use POE::Component::Client::SMTP;
 use Email::Simple::Creator;
 use File::Slurp;
+use Data::Dump qw(pp);
 use Agent::TCLI::Command;
 use Agent::TCLI::Parameter;
 use Getopt::Lucid qw(:all);
 
-our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: SMTP.pm 72 2007-06-07 11:05:52Z hacker $))[2];
+our $VERSION = '0.030.'.sprintf "%04d", (qw($Id: SMTP.pm 74 2007-06-08 00:42:53Z hacker $))[2];
 
 =head2 ATTRIBUTES
 
@@ -186,6 +185,18 @@ Agent::TCLI::Parameter:
     fail. Use Unix style path names.
   type: Param
 ---
+Agent::TCLI::Parameter:
+  name: msgfile
+  constraints:
+    - ASCII
+  help: A file of plain text for the message body.
+  manual: >
+    The msgfile will be used as the entire message for sending an email. It
+    should include headers. If the file cannot be found, the request will
+    fail. Use Unix style path names. The to and from must still be defined,
+    though they need not match what is in the msg.
+  type: Param
+---
 Agent::TCLI::Command:
   name: smtp
   call_style: session
@@ -247,6 +258,31 @@ Agent::TCLI::Command:
     textfile:
   topic: net
   usage: smtp sendtext to=joe@example.com from=jane@example.com subject=Hi textfile="/tmp/hello.txt"
+---
+Agent::TCLI::Command:
+  name: sendmsg
+  call_style: session
+  command: tcli_smtp
+  contexts:
+    smtp: sendmsg
+  handler: send
+  help: send a mail message
+  manual: >
+    Send mail to a SMTP server when the body is from a text file on the local
+    host system.
+  parameters:
+    to:
+    from:
+    msgfile:
+    timeout:
+    subject:
+    server:
+    port:
+  required:
+    to:
+    msgfile:
+  topic: net
+  usage: smtp sendmsg to=joe@example.com msgfile="/tmp/hello.msg"
 ---
 Agent::TCLI::Command:
   name: set
@@ -328,8 +364,8 @@ sub SendMailFailure {
 	my ($kernel,  $self,  $request, $fail) =
       @_[KERNEL, OBJECT,      ARG0,  ARG1];
 
-    $request->Respond($kernel, "Failed: ".Dumper($fail),400);
-	$self->Verbose( "SendMailFailed: ".Dumper($fail));
+    $request->Respond($kernel, "Failed: ".pp($fail),400);
+	$self->Verbose( "SendMailFailed: ".pp($fail));
 }
 
 sub send {
@@ -384,6 +420,19 @@ sub send {
 
         $body = $email->as_string;
 	}
+	elsif ($command eq 'sendmsg')
+	{
+		my $file = read_file( $param->{'msgfile'}, err_mode => 'quiet' );
+
+		unless (defined $file)
+		{
+			$request->Respond($kernel, "failed: sendmsg file not found", 404);
+			$self->Verbose("send: sendmsg file not found (".$param->{'textfile'}.") ");
+			return
+		}
+
+        $body = $file;
+	}
 
     # Note that you are prohibited by RFC to send bare LF characters in e-mail
     # messages; consult: http://cr.yp.to/docs/smtplf.html
@@ -405,7 +454,7 @@ sub send {
 		Alias           => 'pococlsmtpX',
 		SMTP_Success    => 'SendMailSuccess',
 		SMTP_Failure    => 'SendMailFailure',
-		Debug			=> 1,
+#		Debug			=>  0,
 	);
 }
 

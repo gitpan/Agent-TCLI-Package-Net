@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: TCLI.Package.Net.SMTP.Live.t 73 2007-06-07 11:46:12Z hacker $
+# $Id: TCLI.Package.Net.SMTP.Live.t 74 2007-06-08 00:42:53Z hacker $
 
 # This test requires that the system be running a SMTP daemon on
 # localhost at port 25. Without changes, it will generate emails
@@ -67,8 +67,27 @@ $t->ok('send body="test 1"');
 $t->ok('set subject="Test File Message"');
 $t->ok('sendtext textfile="Build.PL"');
 
+$t->ok('set subject="Test Msg Message"');
+$t->ok('sendmsg msgfile="t/dev/email.wmsg"');
+
+# Other address formats
+$t->ok('set from="\"Testee\" <testee@testing.erichacker.com>"');
+$t->ok('send subj="test address escaped quotes"');
+
+$t->ok('set from="\"Testee Jr\" <testee@testing.erichacker.com>"');
+$t->ok('send subj="test address escaped quotes with space"');
+
+$t->ok('set from="Testee Jr <testee@testing.erichacker.com>"');
+$t->ok('send subj="test address space no quotes"');
+
+
 # fail for noexistant file
 $t->not_ok('sendtext textfile="DONTREADME"');
+
+# fail for bad address
+$t->not_ok('set from="Testee testee@testing.erichacker.com"');
+
+
 
 $test_master->run;
 

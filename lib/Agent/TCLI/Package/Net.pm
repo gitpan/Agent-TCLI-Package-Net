@@ -1,16 +1,12 @@
 package Agent::TCLI::Package::Net;
 #
-# $Id: Net.pm 72 2007-06-07 11:05:52Z hacker $
+# $Id: Net.pm 74 2007-06-08 00:42:53Z hacker $
 #
 =pod
 
 =head1 NAME
 
-Agent::TCLI::Package::Net
-
-=head1 VERSION
-
-This document describes Agent::TCLI::Package::Net
+Agent::TCLI::Package::Net - Network related commands for TCLI Agents
 
 =head1 SYNOPSIS
 
@@ -25,7 +21,7 @@ placeholder.
 
 =cut
 
-our $VERSION = '0.030';
+our $VERSION = '0.031';
 
 1;
 #__END__

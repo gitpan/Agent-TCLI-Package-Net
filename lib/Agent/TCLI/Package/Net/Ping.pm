@@ -1,6 +1,6 @@
 package Agent::TCLI::Package::Net::Ping;
 #
-# $Id: Ping.pm 72 2007-06-07 11:05:52Z hacker $
+# $Id: Ping.pm 74 2007-06-08 00:42:53Z hacker $
 #
 =pod
 
@@ -40,7 +40,7 @@ use Agent::TCLI::Command;
 use Agent::TCLI::Parameter;
 
 
-our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: Ping.pm 72 2007-06-07 11:05:52Z hacker $))[2];
+our $VERSION = '0.030.'.sprintf "%04d", (qw($Id: Ping.pm 74 2007-06-08 00:42:53Z hacker $))[2];
 
 =head2 ATTRIBUTES
 

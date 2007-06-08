@@ -1,12 +1,12 @@
 package Agent::TCLI::Package::Net::HTTP;
 #
-# $Id: HTTP.pm 72 2007-06-07 11:05:52Z hacker $
+# $Id: HTTP.pm 74 2007-06-08 00:42:53Z hacker $
 #
 =pod
 
 =head1 NAME
 
-Agent::TCLI::Package::Net:HTTP
+Agent::TCLI::Package::Net::HTTP
 
 =head1 SYNOPSIS
 
@@ -43,7 +43,7 @@ use Agent::TCLI::Command;
 use Agent::TCLI::Parameter;
 use Getopt::Lucid qw(:all);
 
-our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: HTTP.pm 72 2007-06-07 11:05:52Z hacker $))[2];
+our $VERSION = '0.030.'.sprintf "%04d", (qw($Id: HTTP.pm 74 2007-06-08 00:42:53Z hacker $))[2];
 
 =head2 ATTRIBUTES
 
@@ -131,11 +131,6 @@ be of interest only to developers trying to enhance TCLI.
 Usually the only attributes that are useful on creation are the
 verbose and do_verbose attrbiutes that are inherited from Agent::TCLI::Base.
 
-=item _preinit
-
-This private Object::InsideOut (OIO) method is used for object initialization.
-It establishes the POE::Session and the POE alias used.
-
 =cut
 
 sub _preinit :PreInit {
@@ -162,13 +157,6 @@ sub _preinit :PreInit {
 	);
 
 }
-
-=item _init
-
-This private OIO method is used for object initialization.
-Here the commands and parameters are defined in YAML.
-
-=cut
 
 sub _init :Init {
 	my $self = shift;
@@ -310,12 +298,6 @@ Agent::TCLI::Command:
 
 }
 
-=item _start
-
-This POE event handler is called when POE starts up a Package.
-
-=cut
-
 sub _start {
 	my ($kernel,  $self,  $session) =
       @_[KERNEL, OBJECT,   SESSION];
@@ -357,12 +339,6 @@ sub _start {
 	$self->Verbose(" Dump ".$self->dump(1),3 );
 
 }
-
-=item _stop
-
-This POE event handler is called when POE stops a Package.
-
-=cut
 
 sub _stop {
     my ($kernel,  $self,) =

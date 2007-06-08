@@ -1,5 +1,11 @@
 Revision history for Agent::TCLI::Package::Net
 
+0.031	Thu Jun  7 20:40:10 EST 2007
+	- Fixed up more POD errors
+	- Fixed bug in SMTP when failing to send, created dev test
+	- Turned off some debugging in SMTP that was left on.
+	- Added SMTP sendmsg command
+
 0.03	Thu Jun  7 06:42:00 EST 2007
 	- Added SMTP client package
 	- Cleaned up some PODs

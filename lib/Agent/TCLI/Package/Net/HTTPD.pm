@@ -1,12 +1,12 @@
 package Agent::TCLI::Package::Net::HTTPD;
 #
-# $Id: HTTPD.pm 72 2007-06-07 11:05:52Z hacker $
+# $Id: HTTPD.pm 74 2007-06-08 00:42:53Z hacker $
 #
 =pod
 
 =head1 NAME
 
-Agent::TCLI::Package::Net:HTTP
+Agent::TCLI::Package::Net::HTTPD
 
 =head1 SYNOPSIS
 
@@ -49,7 +49,7 @@ use Agent::TCLI::Parameter;
 require FormValidator::Simple;
 FormValidator::Simple->import('NetAddr::IP');
 
-our $VERSION = '0.020.'.sprintf "%04d", (qw($Id: HTTPD.pm 72 2007-06-07 11:05:52Z hacker $))[2];
+our $VERSION = '0.030.'.sprintf "%04d", (qw($Id: HTTPD.pm 74 2007-06-08 00:42:53Z hacker $))[2];
 
 =head2 ATTRIBUTES
 
